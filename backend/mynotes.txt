@@ -187,3 +187,13 @@ We’ll use axios to send and receive data:
 | **Hooks**     | `useState`, `useEffect` etc., to manage state/lifecycle    |
 | **axios**     | Library to make HTTP requests (like fetch, but cleaner)    |
 | **npm start** | Runs dev server (hot-reload enabled)                       |
+
+🧠 What We’ve Done So Far (React Summary)
+1. Set up a React app using create-react-app which gives us a fully functional frontend environment with zero config.
+2. Created the main layout in App.js, which acts as a "controller" to render two key components:
+      AddExpense.js → A form where users can type in new expenses.
+      ExpenseList.js → A section that will display the list of added expenses (fetched from backend later).
+3. These components are like "mini apps" within the app — each handling its own UI and logic.
+4. React uses state to keep track of input values and updates the UI without refreshing the page.
+5. We're setting the stage to connect to the Flask backend, send expense data, and display it dynamically.
+6. No complex logic or backend talk yet — just UI scaffolding to collect and show information.
