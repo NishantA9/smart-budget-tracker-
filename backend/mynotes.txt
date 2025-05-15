@@ -1,0 +1,134 @@
+🔧 Terminal Setup Summary
+1. python -m venv venv
+👉 Creates a new virtual environment named venv
+This is an isolated environment to install project-specific dependencies without polluting your global Python environment.
+
+2. source venv/Scripts/activate
+👉 Activates the virtual environment so any packages you install with pip go inside venv.
+
+3. pip install -r requirements.txt
+👉 Installs all the packages listed in requirements.txt, such as:
+
+Flask: Web server
+
+Flask-CORS: Enables Cross-Origin Resource Sharing (needed for frontend-backend interaction)
+
+Flask-SQLAlchemy: ORM to talk to the database using Python
+
+python-dotenv: To load environment variables from .env file
+
+
+🐍 Python Shell (Interactive Python session)
+4. from _init_ import create_app, db
+👉 This imports the create_app() factory function and db instance from your Flask app.
+
+5. app = create_app()
+👉 Initializes your Flask app by:
+
+Creating the app object
+
+Loading config
+
+Initializing DB (db.init_app(app))
+
+Registering the API blueprint
+
+6. app.app_context().push()
+👉 Creates an application context manually, so you can interact with Flask-specific features like current_app, g, and db outside of a request.
+
+7. db.create_all()
+👉 Tells SQLAlchemy to create all tables defined in your models (inside models.py) in your configured database.
+
+8. exit()
+👉 Exits the Python shell.
+
+====================================================================================================================================
+
+📁 __init__.py
+This is the Flask application factory file. It bootstraps your app.
+
+1. Flask(__name__): Creates the Flask app
+2. app.config.from_object(Config): Loads configuration (like DB URI) from config.py
+3. db.init_app(app): Binds SQLAlchemy to this app
+4. CORS(app): Enables CORS so your frontend (React) can talk to this backend
+5. app.register_blueprint(api): Adds route handlers from routes.py
+
+Purpose: Bootstraps and returns a fully configured app
+
+
+📁 config.py
+Handles app configuration settings.
+
+1. SQLALCHEMY_DATABASE_URI: Where your SQLite DB lives (in this case, app.db)
+2. SQLALCHEMY_TRACK_MODIFICATIONS: Disables unnecessary event system
+
+Purpose: Central place to define environment variables or DB configs.
+
+
+📁 models.py
+Defines your database schema using SQLAlchemy.
+
+1. Expense is a table with columns: id, description, amount, category, date
+2. db.Model gives it ORM power (can use .query, .add, .commit, etc.)
+
+Purpose: Data model that maps to your DB.
+
+
+📁 routes.py
+Handles API routes using Flask Blueprints.
+
+code:
+
+from flask import Blueprint, request, jsonify
+from models import Expense, db
+from datetime import datetime
+api = Blueprint('api', __name__)
+
+-----0__0-----
+Code-Example route:
+
+@api.route('/expenses', methods=['POST'])
+def add_expense():
+    data = request.get_json()
+    expense = Expense(
+        description=data['description'],
+        amount=data['amount'],
+        category=data['category'],
+        date=datetime.strptime(data['date'], '%Y-%m-%d')
+    )
+    db.session.add(expense)
+    db.session.commit()
+    return jsonify({'message': 'Expense added successfully'}), 201
+-----0__0-----
+
+1. Blueprint: Modularizes your routes
+2. request.get_json(): Reads JSON body
+3. Expense(...): Creates a new record
+4. db.session.add + commit: Saves to database
+
+Purpose: Defines the backend API endpoints your React frontend will hit.
+
+
+📁 app.py (Optional)
+If you want to run the app directly (instead of using WSGI server):
+code:
+
+from _init_ import create_app
+app = create_app()
+if __name__ == '__main__':
+    app.run(debug=True)
+-----0__0-----
+
+Purpose: Entry point if you're running via python app.py
+
+
+💡 Folder Summary
+| File          | Responsibility                    |
+| ------------- | --------------------------------- |
+| `__init__.py` | Sets up and returns the Flask app |
+| `config.py`   | Configuration (like DB URI)       |
+| `models.py`   | SQLAlchemy DB models              |
+| `routes.py`   | API route handlers                |
+| `app.py`      | App entry-point for development   |
+
+====================================================================================================================================
