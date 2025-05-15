@@ -1,37 +1,31 @@
+==========================================================================================================
+⚛️ Backend Project Setup Notes
+==========================================================================================================
 🔧 Terminal Setup Summary
-1. python -m venv venv
-👉 Creates a new virtual environment named venv
-This is an isolated environment to install project-specific dependencies without polluting your global Python environment.
+1. python -m venv venv: 
+👉 Creates a new virtual environment named venv, This is an isolated environment to install project-specific dependencies without polluting your global Python environment.
 
-2. source venv/Scripts/activate
+2. source venv/Scripts/activate: 
 👉 Activates the virtual environment so any packages you install with pip go inside venv.
 
-3. pip install -r requirements.txt
+3. pip install -r requirements.txt: 
 👉 Installs all the packages listed in requirements.txt, such as:
-
-Flask: Web server
-
-Flask-CORS: Enables Cross-Origin Resource Sharing (needed for frontend-backend interaction)
-
-Flask-SQLAlchemy: ORM to talk to the database using Python
-
-python-dotenv: To load environment variables from .env file
+    Flask: Web server
+    Flask-CORS: Enables Cross-Origin Resource Sharing (needed for frontend-backend interaction)
+    Flask-SQLAlchemy: ORM to talk to the database using Python
+    python-dotenv: To load environment variables from .env file
 
 
 🐍 Python Shell (Interactive Python session)
-4. from _init_ import create_app, db
+4. from _init_ import create_app, db: 
 👉 This imports the create_app() factory function and db instance from your Flask app.
 
-5. app = create_app()
+5. app = create_app(): 
 👉 Initializes your Flask app by:
-
-Creating the app object
-
-Loading config
-
-Initializing DB (db.init_app(app))
-
-Registering the API blueprint
+    Creating the app object
+    Loading config
+    Initializing DB (db.init_app(app))
+    Registering the API blueprint
 
 6. app.app_context().push()
 👉 Creates an application context manually, so you can interact with Flask-specific features like current_app, g, and db outside of a request.
@@ -131,4 +125,65 @@ Purpose: Entry point if you're running via python app.py
 | `routes.py`   | API route handlers                |
 | `app.py`      | App entry-point for development   |
 
-====================================================================================================================================
+
+==========================================================================================================
+⚛️ Frontend (React) Project Setup Notes
+==========================================================================================================
+
+📁 Basic Folder Structure
+
+frontend/
+├── node_modules/        → Installed dependencies (auto-generated)
+├── public/              → Static assets (like index.html)
+├── src/                 → Source code (JS components)
+│   ├── App.js           → Main app layout and routing
+│   ├── index.js         → Entry point, renders <App />
+│   ├── AddExpense.js    → Form to add expenses
+│   ├── ExpenseList.js   → Displays added expenses
+├── .gitignore           → Files to ignore (e.g., node_modules)
+├── package.json         → Project metadata and dependencies
+├── README.md            → Optional project documentation
+
+
+🛠️ Terminal Commands (React Setup)
+1. npx create-react-app frontend : 👉 Bootstraps a new React project with all default configs
+2. cd frontend: 👉 Enters the project directory
+3. npm start: 👉 Starts the development server (http://localhost:3000)
+
+
+🧩 Key React Files
+📄 index.js: Entry point of the app, Renders the <App /> component into the DOM
+📄 App.js: Main component that holds your layout and renders AddExpense and ExpenseList
+Example Code:
+function App() {
+  return (
+    <div>
+      <h1>Smart Budget Tracker</h1>
+      <AddExpense />
+      <ExpenseList />
+    </div>
+  );
+}
+
+-----0__0-----
+
+📄 AddExpense.js: A form component to enter a new expense, Handles form inputs and sends POST request to backend, Sends data like: description, amount, category, date
+📄 ExpenseList.js: Fetches and displays expenses from backend using GET /expenses, Maps each expense to a row or card in a list.
+
+
+🔄 React + Backend Communication
+We’ll use axios to send and receive data:
+    1. axios.post('/expenses', { ... }) → Add new expense
+    2. axios.get('/expenses') → Get list of expenses
+📦 Install: npm install axios
+
+
+💡 React Concepts Recap
+| Concept       | Meaning                                                    |
+| ------------- | ---------------------------------------------------------- |
+| **JSX**       | HTML + JS syntax inside components                         |
+| **Props**     | Data passed to components                                  |
+| **State**     | Local component data (like form inputs or fetched results) |
+| **Hooks**     | `useState`, `useEffect` etc., to manage state/lifecycle    |
+| **axios**     | Library to make HTTP requests (like fetch, but cleaner)    |
+| **npm start** | Runs dev server (hot-reload enabled)                       |
